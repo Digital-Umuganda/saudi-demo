@@ -12,46 +12,42 @@ const Home = () => {
   return (
     <Container>
       <div className="hero">
-        <div className="content">
-          <p className="heading">
-            The Next African{" "}
-            <span>
-              Language Tool. <div className="line" />{" "}
-            </span>
-          </p>
-          <p className="para">
-            Fusce volutpat lectus et nisl consectetur finibus. In vitae
-            scelerisque augue, in varius eros. Nunc sapien diam, euismod et
-            pretium id, volutpat et tortor.
-          </p>
-          <div className="about">
-            <p>About Us</p>
-            <IoChevronDownCircleOutline />
-          </div>
+        <p className="heading">
+          The Next African{" "}
+          <span>
+            Language Tool. <div className="line" />{" "}
+          </span>
+        </p>
+        <p className="para">
+          Fusce volutpat lectus et nisl consectetur finibus. In vitae
+          scelerisque augue, in varius eros. Nunc sapien diam, euismod et
+          pretium id, volutpat et tortor.
+        </p>
+        <div className="about">
+          <p>About Us</p>
+          <IoChevronDownCircleOutline />
         </div>
       </div>
       <div className="imigongo" />
       <div className="aboutus">
-        <div className="content">
-          <div className="logo"></div>
-          <div className="info">
-            <p>
-              DIGITAL UMUGANDA is an Artificial intelligence and common digital
-              infrastructure company currently focusing on voice technologies to
-              democratize access to information and services hence reducing the
-              digital divide gap. This is done by being a platform for
-              international commons initiatives such as Common voice linking
-              global efforts to local communities and contexts. Digital Umuganda
-              projects aligns with the national digital smart master plans with
-              a focus on projects with a sustainable development impact.
-            </p>
-            <div className="buttons">
-              <div className="button">
-                <p>Learn more</p>
-              </div>
-              <div className="button">
-                <p>Contact us</p>
-              </div>
+        <div className="logo"></div>
+        <div className="info">
+          <p>
+            DIGITAL UMUGANDA is an Artificial intelligence and common digital
+            infrastructure company currently focusing on voice technologies to
+            democratize access to information and services hence reducing the
+            digital divide gap. This is done by being a platform for
+            international commons initiatives such as Common voice linking
+            global efforts to local communities and contexts. Digital Umuganda
+            projects aligns with the national digital smart master plans with a
+            focus on projects with a sustainable development impact.
+          </p>
+          <div className="buttons">
+            <div className="button">
+              <p>Learn more</p>
+            </div>
+            <div className="button">
+              <p>Contact us</p>
             </div>
           </div>
         </div>
@@ -70,87 +66,80 @@ const Home = () => {
 };
 
 const Container = styled.div`
-  width: 100vw;
+  width: 99vw;
   height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 
   .hero {
     width: 100%;
-    height: calc(100vh - 30px);
+    height: 900px;
     background: url("/assets/background.png") no-repeat center center;
     background-size: cover;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     position: relative;
 
-    .content {
-      width: 1280px;
-      height: 100%;
+    p.heading {
+      font-size: 3.6em;
+      font-weight: bold;
+      color: var(--white);
+
+      span {
+        color: var(--yellow);
+        position: relative;
+
+        .line {
+          width: 100%;
+          height: 4px;
+          position: absolute;
+          bottom: -10px;
+          right: 0;
+          border-radius: 50px;
+          background: var(--yellow);
+        }
+      }
+    }
+
+    p.para {
+      margin-top: 60px;
+      text-align: center;
+      width: 50%;
+      color: var(--white);
+      font-size: 1em;
+    }
+
+    .about {
+      position: absolute;
+      bottom: 50px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
+      color: var(--white);
 
-      p.heading {
-        font-size: 3.6em;
-        font-weight: bold;
-        color: var(--white);
-
-        span {
-          color: var(--yellow);
-          position: relative;
-
-          .line {
-            width: 100%;
-            height: 4px;
-            position: absolute;
-            bottom: -10px;
-            right: 0;
-            border-radius: 50px;
-            background: var(--yellow);
-          }
-        }
-      }
-
-      p.para {
-        margin-top: 60px;
-        text-align: center;
-        width: 50%;
-        color: var(--white);
+      p {
         font-size: 1em;
       }
 
-      .about {
-        position: absolute;
-        bottom: 50px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        color: var(--white);
+      svg {
+        margin-top: 5px;
+        font-size: 1.8em;
+      }
 
-        p {
-          font-size: 1em;
-        }
-
-        svg {
-          margin-top: 5px;
-          font-size: 1.8em;
-        }
-
-        &:hover {
-          color: var(--yellow);
-        }
+      &:hover {
+        color: var(--yellow);
       }
     }
   }
 
   .imigongo {
-    width: 100vw;
+    width: 100%;
     overflow: hidden;
     height: 30px;
     display: flex;
@@ -162,52 +151,44 @@ const Container = styled.div`
   }
 
   .aboutus {
-    width: 100vw;
+    width: 1280px;
     height: 500px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
 
-    .content {
-      width: 1280px;
-      height: 100%;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
+    .logo {
+      width: 300px;
+      height: 300px;
+      margin-right: 100px;
+      background: url("/assets/logo.png") no-repeat center center;
+      background-size: contain;
+    }
 
-      .logo {
-        width: 300px;
-        height: 300px;
-        margin-right: 100px;
-        background: url("/assets/logo.png") no-repeat center center;
-        background-size: contain;
-      }
+    .info {
+      width: 450px;
 
-      .info {
-        width: 450px;
+      .buttons {
+        width: 100%;
+        height: 40px;
+        display: flex;
+        margin-top: 20px;
+        flex-direction: row;
+        align-items: center;
 
-        .buttons {
-          width: 100%;
+        .button {
+          width: 150px;
           height: 40px;
           display: flex;
-          margin-top: 20px;
           flex-direction: row;
           align-items: center;
-
-          .button {
-            width: 150px;
-            height: 40px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50px;
-            margin-right: 10px;
-            cursor: pointer;
-            color: var(--black);
-            background: var(--yellow);
-          }
+          justify-content: center;
+          border-radius: 50px;
+          margin-right: 10px;
+          cursor: pointer;
+          color: var(--black);
+          background: var(--yellow);
         }
       }
     }

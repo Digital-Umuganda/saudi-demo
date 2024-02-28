@@ -6,6 +6,7 @@ import Home from "./pages/home";
 
 // Components
 import Nav from "./components/nav";
+import Record from "./pages/transcribe/record";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Nav />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/transcribe/record" element={<Record />} />
       </Routes>
     </BrowserRouter>
   );

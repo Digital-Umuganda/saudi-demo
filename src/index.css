@@ -5,6 +5,7 @@
   --gray: #b8b8b8;
   --white: #ffffff;
   --black: #2e2e2e;
+  --green: #28b652;
   --yellow: #ede327;
   --background: #f7f7f7;
   --super-gray: #dedede;
@@ -21,4 +22,5 @@ body {
   font-family: "Quicksand", sans-serif;
   font-size: 14px;
   line-height: 20px;
+  background: var(--background);
 }

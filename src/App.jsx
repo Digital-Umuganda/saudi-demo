@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 
 // Pages
 import Home from "./pages/home";
+import Text from "./pages/transcribe/text";
 import Audio from "./pages/transcribe/audio";
 import Record from "./pages/transcribe/record";
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/transcribe/record" element={<Record />} />
         <Route path="/transcribe/audio" element={<Audio />} />
+        <Route path="/transcribe/text" element={<Text />} />
       </Routes>
     </BrowserRouter>
   );

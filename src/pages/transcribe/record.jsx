@@ -12,11 +12,11 @@ const Record = () => {
   return (
     <Container>
       <div className="content">
-        {/* <div className="rest">
+        <div className="rest">
           <PiBookOpenTextFill />
           <p>Record an audio to see the transcription here.</p>
-        </div> */}
-        <div className="tops">
+        </div>
+        {/* <div className="tops">
           <div className="button">
             <IoMdArrowRoundBack />
             <p>Go back</p>
@@ -25,10 +25,10 @@ const Record = () => {
             <AiFillEdit />
             <p>Edit</p>
           </div>
-        </div>
-        <div className="text">
+        </div> */}
+        {/* <div className="text">
           <p>Trying</p>
-        </div>
+        </div> */}
       </div>
       <RecordComponent />
     </Container>

@@ -39,9 +39,9 @@ const RecordComponent = () => {
   return (
     <Container>
       <div className="controlls">
-        {/* <div className="mic">
+        <div className="mic">
           <RiMicFill />
-        </div> */}
+        </div>
         {/* <div className="recording">
           <div className="timer">
             <p>00:00</p>
@@ -74,7 +74,7 @@ const RecordComponent = () => {
             <IoClose />
           </div>
         </div> */}
-        <div className="record">
+        {/* <div className="record">
           <div className="pause">
             <FaPause />
           </div>
@@ -83,7 +83,7 @@ const RecordComponent = () => {
             <div className="line" ref={wavesRef} />
             <p>00:00</p>
           </div>
-        </div>
+        </div> */}
       </div>
       <SelectBox>
         <option value="Kinyarwanda">Kinyarwanda</option>

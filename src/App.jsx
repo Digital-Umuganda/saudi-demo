@@ -10,6 +10,7 @@ import Document from "./pages/transcribe/document";
 import TranslateText from "./pages/translate/text";
 import TranslateAudio from "./pages/translate/audio";
 import TranslateRecord from "./pages/translate/record";
+import TranslateDocument from "./pages/translate/document";
 
 // Components
 import Nav from "./components/nav";
@@ -30,6 +31,7 @@ function App() {
         <Route path="/translate/text" element={<TranslateText />} />
         <Route path="/translate/audio" element={<TranslateAudio />} />
         <Route path="/translate/record" element={<TranslateRecord />} />
+        <Route path="/translate/document" element={<TranslateDocument />} />
       </Routes>
     </BrowserRouter>
   );

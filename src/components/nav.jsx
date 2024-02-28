@@ -43,9 +43,20 @@ const Nav = () => {
             <Link to={"transcribe/document"}>Document</Link>
           </div>
         </div>
-        <div className="link">
+        <div
+          className={
+            location.pathname.includes("translate") ? "active" : "link"
+          }
+        >
           <PiTranslateBold />
-          <p>Trannslate</p>
+          <p>
+            {location.pathname.includes("translate")
+              ? `Translate: ${
+                  location.pathname.split("/")[2].charAt(0).toUpperCase() +
+                  location.pathname.split("/")[2].slice(1)
+                }`
+              : "Translate"}
+          </p>
           <FaAngleDown />
           <div className="dropdown">
             <Link to={"/translate/record"}>Record</Link>

@@ -1,113 +1,55 @@
-import { useRef } from "react";
 import styled from "styled-components";
-import { useWavesurfer } from "@wavesurfer/react";
 
-//Icons
-import { FaPause } from "react-icons/fa";
+// Icons
 import { AiFillEdit } from "react-icons/ai";
-import { MdFileUpload } from "react-icons/md";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { MdOutlineFormatTextdirectionLToR } from "react-icons/md";
 
 const Text = () => {
-  const wavesRef = useRef(null);
-
-  const { wavesurfer } = useWavesurfer({
-    container: wavesRef,
-    url: null,
-    waveColor: "#101010",
-    progressColor: "#FD6662",
-    cursorColor: "#E6E6E6",
-    height: 50,
-  });
-
-  const tooglePlaying = () => {
-    wavesurfer.playPause();
-  };
-
   return (
     <Container>
-      <div className="content">
+      <div className="box">
         <div className="tops">
+          {/* <div className="button">
+            <IoMdArrowRoundBack />
+            <p>Go back</p>
+          </div> */}
+          <p>Your Text</p>
           <SelectBox>
             <option value="Kinyarwanda">Kinyarwanda</option>
             <option value="English">English</option>
           </SelectBox>
+        </div>
+        <div className="content">
+          <textarea
+            name="text"
+            id="text"
+            cols="30"
+            rows="10"
+            placeholder="Type your text here"
+          ></textarea>
+        </div>
+      </div>
+      <div className="tool">
+        <MdOutlineFormatTextdirectionLToR />
+      </div>
+      <div className="box">
+        <div className="tops">
+          <p>Generated Text</p>
           {/* <div className="button">
-            <IoMdArrowRoundBack />
-            <p>Go back</p>
-          </div>
-          <div className="button">
             <AiFillEdit />
             <p>Edit</p>
           </div> */}
+          <SelectBox>
+            <option value="Kinyarwanda">Kinyarwanda</option>
+            <option value="English">English</option>
+          </SelectBox>
         </div>
-        <div className="input">
-          <textarea
-            name=""
-            id=""
-            cols="30"
-            rows="10"
-            autoFocus
-            placeholder="Type your text here..."
-          />
-        </div>
-        {/* <div className="text">
-          <p>Trying</p>
-        </div> */}
+        <div className="content"></div>
       </div>
-      <Player>
-        <div className="pause">
-          <FaPause />
-        </div>
-        <div className="sound">
-          <p>00:00</p>
-          <div className="line" ref={wavesRef} />
-          <p>00:00</p>
-        </div>
-      </Player>
     </Container>
   );
 };
-
-const Player = styled.div`
-  width: auto;
-  height: 60px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  position: absolute;
-  bottom: 40px;
-  border-radius: 50px;
-  background: var(--white);
-  border: 1px solid var(--super-gray);
-  padding: 0 5px;
-
-  .pause {
-    width: 50px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border-right: 1px solid var(--super-gray);
-
-    svg {
-      font-size: 1.2em;
-      color: var(--green);
-    }
-  }
-
-  .sound {
-    width: 300px;
-    height: 30px;
-    padding: 0 15px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-`;
 
 const SelectBox = styled.select`
   width: 160px;
@@ -131,16 +73,38 @@ const Container = styled.div`
   width: 100vw;
   height: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   position: relative;
+  gap: 20px;
 
-  .content {
+  .tool {
+    width: 50px;
+    height: 50px;
+    background: var(--white);
+    border: 1px solid var(--super-gray);
+    border-radius: 50%;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    svg {
+      font-size: 1.5em;
+    }
+  }
+
+  .box {
     border-radius: 5px;
     background: var(--white);
-    width: calc(1280px - 100px);
-    height: calc(100vh - 350px);
+    width: calc(1280px / 2 - 50px);
+    height: calc(100vh - 150px);
+    margin: 0 0 -80px 0;
     border: 1px solid var(--super-gray);
     display: flex;
     flex-direction: column;
@@ -171,9 +135,9 @@ const Container = styled.div`
       }
     }
 
-    .input {
+    .content {
       width: 100%;
-      height: calc(100vh - 350px - 70px);
+      height: calc(100vh - 150px - 70px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -183,24 +147,10 @@ const Container = styled.div`
         width: 100%;
         height: 100%;
         border: none;
-        background: var(--white);
         padding: 15px;
+        font-size: 0.9em;
         resize: none;
         outline: none;
-        overflow-y: scroll;
-        font-size: 0.9em;
-        line-height: 25px;
-      }
-    }
-
-    .text {
-      width: 100%;
-      height: calc(100vh - 350px - 70px);
-      padding: 15px;
-      overflow-y: scroll;
-
-      p {
-        font-size: 0.9em;
         line-height: 25px;
       }
     }

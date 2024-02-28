@@ -223,6 +223,7 @@ const Container = styled.div`
       overflow-y: scroll;
 
       p {
+        font-size: 0.9em;
         line-height: 25px;
       }
     }

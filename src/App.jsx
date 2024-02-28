@@ -7,6 +7,7 @@ import Text from "./pages/transcribe/text";
 import Audio from "./pages/transcribe/audio";
 import Record from "./pages/transcribe/record";
 import Document from "./pages/transcribe/document";
+import TranslateText from "./pages/translate/text";
 import TranslateAudio from "./pages/translate/audio";
 import TranslateRecord from "./pages/translate/record";
 
@@ -26,6 +27,7 @@ function App() {
         <Route path="/transcribe/document" element={<Document />} />
 
         {/* Translate */}
+        <Route path="/translate/text" element={<TranslateText />} />
         <Route path="/translate/audio" element={<TranslateAudio />} />
         <Route path="/translate/record" element={<TranslateRecord />} />
       </Routes>

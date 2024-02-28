@@ -3,10 +3,11 @@ import { BrowserRouter } from "react-router-dom";
 
 // Pages
 import Home from "./pages/home";
+import Audio from "./pages/transcribe/audio";
+import Record from "./pages/transcribe/record";
 
 // Components
 import Nav from "./components/nav";
-import Record from "./pages/transcribe/record";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/transcribe/record" element={<Record />} />
+        <Route path="/transcribe/audio" element={<Audio />} />
       </Routes>
     </BrowserRouter>
   );

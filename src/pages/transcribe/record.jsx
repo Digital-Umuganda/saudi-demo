@@ -1,4 +1,7 @@
+import axios from "axios";
 import styled from "styled-components";
+import { toast } from "react-toastify";
+import { Fragment, useState } from "react";
 
 //Icons
 import { AiFillEdit } from "react-icons/ai";
@@ -9,28 +12,79 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import RecordComponent from "../../components/record";
 
 const Record = () => {
+  //staes
+  const [loading, setLoading] = useState(false);
+  const [requestSuccess, setRequestSuccess] = useState(false);
+
+  const transcribe = async (recordedBlob) => {
+    if (recordedBlob && !loading) {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("file", recordedBlob.blob, recordedBlob.name);
+
+      axios
+        .post("https://stt.umuganda.digital/transcribe/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((res) => {
+          setRequestSuccess(true);
+        })
+        .catch((err) => {
+          switch (err.code) {
+            case "ERR_NETWORK":
+              toast.info("Please check your connection try again.");
+              break;
+
+            case "ERR_BAD_REQUEST":
+              toast.error("Please try again.");
+              break;
+
+            default:
+              break;
+          }
+
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  };
+
   return (
     <Container>
       <div className="content">
-        <div className="rest">
-          <PiBookOpenTextFill />
-          <p>Record an audio to see the transcription here.</p>
-        </div>
-        {/* <div className="tops">
-          <div className="button">
-            <IoMdArrowRoundBack />
-            <p>Go back</p>
+        {requestSuccess ? (
+          <Fragment>
+            <div className="tops">
+              <div className="button">
+                <IoMdArrowRoundBack />
+                <p>Go back</p>
+              </div>
+              <div className="button">
+                <AiFillEdit />
+                <p>Edit</p>
+              </div>
+            </div>
+            <div className="text">
+              <p>Trying</p>
+            </div>
+          </Fragment>
+        ) : (
+          <div className="rest">
+            <PiBookOpenTextFill />
+            <p>Record an audio to see the transcription here.</p>
           </div>
-          <div className="button">
-            <AiFillEdit />
-            <p>Edit</p>
-          </div>
-        </div> */}
-        {/* <div className="text">
-          <p>Trying</p>
-        </div> */}
+        )}
       </div>
-      <RecordComponent />
+      <RecordComponent
+        requestSuccess={requestSuccess}
+        transcribe={transcribe}
+        loading={loading}
+        setLoading={setLoading}
+      />
     </Container>
   );
 };

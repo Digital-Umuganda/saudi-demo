@@ -1,50 +1,115 @@
 import { ReactMic } from "react-mic";
 import styled from "styled-components";
-import { useRef, useState } from "react";
 import { useWavesurfer } from "@wavesurfer/react";
+import { useEffect, useRef, useState } from "react";
 
 //Icons
-import { FaStop } from "react-icons/fa";
 import { FaPause } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { RiMicFill } from "react-icons/ri";
 import { VscLoading } from "react-icons/vsc";
+import { FaStop, FaPlay } from "react-icons/fa";
 import { BsFillSendArrowUpFill } from "react-icons/bs";
 
-const RecordComponent = () => {
+const formatTime = (seconds) =>
+  [seconds / 60, seconds % 60]
+    .map((v) => `0${Math.floor(v)}`.slice(-2))
+    .join(":");
+
+const RecordComponent = ({
+  requestSuccess,
+  transcribe,
+  loading,
+  setLoading,
+}) => {
+  // show states
   const [isRecording, setIsRecording] = useState(false);
+  const [recordedAudio, setRecordedAudio] = useState(null);
+  const [isRecordPlaying, setIsRecordPlaying] = useState(false);
+
+  // action states
+  const [timer, setTimer] = useState(0);
 
   // Audio
   const wavesRef = useRef(null);
 
-  const { wavesurfer } = useWavesurfer({
+  const { wavesurfer, currentTime, isPlaying, getDuration } = useWavesurfer({
     container: wavesRef,
-    url: null,
+    url: recordedAudio?.blobURL || null,
     waveColor: "#101010",
     progressColor: "#FD6662",
     cursorColor: "#E6E6E6",
-    height: 50,
+    height: 30,
+    width: 150,
   });
+
+  useEffect(() => {
+    if (isRecording) {
+      setTimer(0);
+      const interval = setInterval(() => {
+        setTimer((timer) => timer + 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    } else {
+      setTimer(0);
+    }
+  }, [isRecording]);
+
+  const sendAudio = () => {
+    transcribe(recordedAudio);
+  };
 
   const tooglePlaying = () => {
     wavesurfer.playPause();
   };
 
-  const onStop = (recordedBlob) => {};
+  const onStop = (recordedBlob) => {
+    setRecordedAudio(recordedBlob);
+  };
 
   const startRecording = () => {
     setIsRecording(true);
+    setIsRecordPlaying(false);
+    setRecordedAudio(null);
+
+    wavesurfer.empty();
+  };
+
+  const stopRecording = () => {
+    setIsRecording(false);
+    setIsRecordPlaying(true);
+  };
+
+  const closeAudio = () => {
+    setIsRecording(false);
+    setIsRecordPlaying(false);
+    setRecordedAudio(null);
   };
 
   return (
     <Container>
       <div className="controlls">
-        <div className="mic">
+        <div
+          className={
+            !isRecordPlaying && !isRecording && !recordedAudio
+              ? "mic"
+              : "hidden"
+          }
+          onClick={startRecording}
+        >
           <RiMicFill />
         </div>
-        {/* <div className="recording">
+        <div
+          className={
+            !isRecordPlaying && isRecording && !recordedAudio
+              ? "recording"
+              : "hidden"
+          }
+        >
           <div className="timer">
-            <p>00:00</p>
+            <p>
+              {Math.floor(timer / 60)}:{Math.floor(timer % 60)}
+            </p>
           </div>
           <ReactMic
             record={isRecording}
@@ -53,28 +118,37 @@ const RecordComponent = () => {
             strokeColor="#2E2E2E"
             backgroundColor="#FFFFFF"
           />
-          <div className="stop" onClick={startRecording}>
+          <div className="stop" onClick={stopRecording}>
             <FaStop />
           </div>
-        </div> */}
-        {/* <div className="record">
-          <div className="pause">
-            <FaPause />
+        </div>
+        <div
+          className={
+            isRecordPlaying && !isRecording && recordedAudio
+              ? "record"
+              : "hidden"
+          }
+        >
+          <div className="pause" onClick={tooglePlaying}>
+            {isPlaying ? <FaPause /> : <FaPlay />}
           </div>
           <div className="sound">
-            <p>00:00</p>
+            <p>{formatTime(currentTime)}</p>
             <div className="line" ref={wavesRef} />
-            <p>00:00</p>
+            <p>{formatTime(wavesurfer?.getDuration())}</p>
           </div>
-          <div className="send">
-            <BsFillSendArrowUpFill />
-            <img src="/assets/loader.svg" alt="Loader" />
+          <div className="send" onClick={sendAudio}>
+            {loading ? (
+              <img src="/assets/loader.svg" alt="Loader" />
+            ) : (
+              <BsFillSendArrowUpFill />
+            )}
           </div>
-          <div className="close">
+          <div className="close" onClick={closeAudio}>
             <IoClose />
           </div>
-        </div> */}
-        {/* <div className="record">
+        </div>
+        <div className={requestSuccess ? "record" : "hidden"}>
           <div className="pause">
             <FaPause />
           </div>
@@ -83,7 +157,7 @@ const RecordComponent = () => {
             <div className="line" ref={wavesRef} />
             <p>00:00</p>
           </div>
-        </div> */}
+        </div>
       </div>
       <SelectBox>
         <option value="Kinyarwanda">Kinyarwanda</option>
@@ -124,6 +198,10 @@ const Container = styled.div`
   background: var(--white);
   border: 1px solid var(--super-gray);
   padding: 0 5px;
+
+  .hidden {
+    display: none;
+  }
 
   .mic {
     width: 50px;

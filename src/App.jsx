@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router";
+import { ToastContainer } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
 
 // Pages
@@ -15,10 +16,14 @@ import TranslateDocument from "./pages/translate/document";
 // Components
 import Nav from "./components/nav";
 
+//Globals
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
   return (
     <BrowserRouter>
       <Nav />
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<Home />} />
         {/* Transcribe */}

@@ -13,11 +13,11 @@ import RecordComponent from "../../components/record";
 import useSpeechToText from "../../features/speech-to-text";
 
 const Record = () => {
-  //staes
+  //states
   const [blob, setBlob] = useState(null);
   const [language, setLanguage] = useState("kiny");
 
-  const { isLoading, isSuccess } = useSpeechToText(language, blob);
+  const { isLoading, isSuccess, data } = useSpeechToText(language, blob);
 
   return (
     <Container>
@@ -35,7 +35,7 @@ const Record = () => {
               </div>
             </div>
             <div className="text">
-              <p>Trying</p>
+              <p>{data?.text}</p>
             </div>
           </Fragment>
         ) : (

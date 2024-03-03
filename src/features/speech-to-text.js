@@ -8,6 +8,7 @@ import { speechToTextEnConf, speechToTextKinConf } from "./configs";
 import handleError from "./errors";
 
 export default function useSpeechToText(language, blob) {
+  const [data, setData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -15,7 +16,7 @@ export default function useSpeechToText(language, blob) {
     if (blob && !isLoading) {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("file", blob.blob, blob.name);
+      formData.append("file", blob.blob, blob.type);
 
       switch (language) {
         case "kiny":
@@ -23,9 +24,11 @@ export default function useSpeechToText(language, blob) {
             .request(speechToTextKinConf(formData))
             .then((res) => {
               setIsSuccess(true);
+              setData(res.data);
             })
             .catch((err) => {
               handleError(err);
+              setIsSuccess(false);
             })
             .finally(() => {
               setIsLoading(false);
@@ -40,6 +43,7 @@ export default function useSpeechToText(language, blob) {
             })
             .catch((err) => {
               handleError(err);
+              setIsSuccess(false);
             })
             .finally(() => {
               setIsLoading(false);
@@ -52,5 +56,5 @@ export default function useSpeechToText(language, blob) {
     }
   }, [language, blob]);
 
-  return { isLoading, isSuccess };
+  return { isLoading, isSuccess, data };
 }

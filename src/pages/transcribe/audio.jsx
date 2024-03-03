@@ -1,32 +1,57 @@
 import styled from "styled-components";
-import { useCallback, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { useWavesurfer } from "@wavesurfer/react";
+import { Fragment, useCallback, useRef, useState } from "react";
 
 //Icons
-import { FaPause } from "react-icons/fa";
 import { AiFillEdit } from "react-icons/ai";
 import { MdFileUpload } from "react-icons/md";
+import { FaPause, FaPlay } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
-const Audio = () => {
-  const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
-  }, []);
+//Requests
+import useSpeechToText from "../../features/speech-to-text";
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+//Utils
+import { formatTime } from "../../features/utils";
+
+//Languages
+import { speechToTextLanguages } from "../../features/languages";
+
+const Audio = () => {
+  const [url, setUrl] = useState(null);
+  const [blob, setBlob] = useState(null);
+  const [language, setLanguage] = useState("kiny");
+
+  const { isLoading, isSuccess, data } = useSpeechToText(language, blob);
 
   // Audio
   const wavesRef = useRef(null);
 
-  const { wavesurfer } = useWavesurfer({
+  const { wavesurfer, currentTime, isPlaying } = useWavesurfer({
     container: wavesRef,
-    url: null,
     waveColor: "#101010",
+    url: url || null,
     progressColor: "#FD6662",
     cursorColor: "#E6E6E6",
     height: 50,
+    width: 150,
+    normalize: true,
+    partialRender: true,
   });
+
+  const onDrop = useCallback((acceptedFiles) => {
+    const blob = new Blob([acceptedFiles[0]], { type: acceptedFiles[0].type });
+    setBlob({
+      blob: blob,
+      type: acceptedFiles[0].type,
+    });
+
+    // load url
+    setUrl(URL.createObjectURL(blob));
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const tooglePlaying = () => {
     wavesurfer.playPause();
@@ -35,47 +60,69 @@ const Audio = () => {
   return (
     <Container>
       <div className="content">
-        <div className="tops">
-          <SelectBox>
-            <option value="Kinyarwanda">Kinyarwanda</option>
-            <option value="English">English</option>
-          </SelectBox>
-          {/* <div className="button">
-            <IoMdArrowRoundBack />
-            <p>Go back</p>
-          </div>
-          <div className="button">
-            <AiFillEdit />
-            <p>Edit</p>
-          </div> */}
-        </div>
-        <div className="dropzone" {...getRootProps()}>
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <p>Drop the file here ...</p>
-          ) : (
-            <div className="initial">
-              <MdFileUpload />
-              <p>
-                Drag and drop or <span>Choose a file</span> to upload
-              </p>
-              <p>Supported Formats: MP4, WAV, FLAC </p>
+        {isSuccess && (
+          <div className="tops">
+            <div className="button">
+              <IoMdArrowRoundBack />
+              <p>Go back</p>
             </div>
-          )}
-        </div>
-        {/* <div className="text">
-          <p>Trying</p>
-        </div> */}
+            <div className="button">
+              <AiFillEdit />
+              <p>Edit</p>
+            </div>
+          </div>
+        )}
+        {!isSuccess && !isLoading && (
+          <div className="dropzone" {...getRootProps()}>
+            <input {...getInputProps()} />
+            {isDragActive ? (
+              <p>Drop the file here ...</p>
+            ) : (
+              <div className="initial">
+                <MdFileUpload />
+                <p>
+                  Drag and drop or <span>Choose a file</span> to upload
+                </p>
+                <p>Supported Formats: WAV, AU, AIFF, MP3, CSL, SD </p>
+              </div>
+            )}
+          </div>
+        )}
+        {!isSuccess && isLoading && (
+          <div className="loading">
+            <img src="/assets/loader.svg" alt="Loader" />
+            <p>Transcribing...</p>
+          </div>
+        )}
+        {isSuccess && !isLoading && (
+          <div className="text">
+            <p>{data?.text}</p>
+          </div>
+        )}
       </div>
       <Player>
-        <div className="pause">
-          <FaPause />
-        </div>
-        <div className="sound">
-          <p>00:00</p>
-          <div className="line" ref={wavesRef} />
-          <p>00:00</p>
-        </div>
+        <Fragment>
+          <div className="pause" onClick={tooglePlaying}>
+            {isPlaying ? <FaPause /> : <FaPlay />}
+          </div>
+          <div className="sound">
+            <p>{formatTime(currentTime)}</p>
+            <div className="line" ref={wavesRef} />
+            <p>{formatTime(wavesurfer?.getDuration())}</p>
+          </div>
+          <SelectBox
+            onChange={(e) => {
+              setLanguage(e.target.value);
+            }}
+            value={language}
+          >
+            {speechToTextLanguages.map((lang, index) => (
+              <option key={index} value={lang.value}>
+                {lang.name}
+              </option>
+            ))}
+          </SelectBox>
+        </Fragment>
       </Player>
     </Container>
   );
@@ -118,6 +165,7 @@ const Player = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    border-right: 1px solid var(--super-gray);
   }
 `;
 
@@ -213,6 +261,22 @@ const Container = styled.div`
             cursor: pointer;
           }
         }
+      }
+    }
+
+    .loading {
+      width: auto;
+      height: auto;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      img {
+        width: 40px;
+      }
+
+      p {
+        color: var(--gray);
       }
     }
 

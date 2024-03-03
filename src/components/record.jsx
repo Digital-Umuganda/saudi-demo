@@ -10,21 +10,11 @@ import { RiMicFill } from "react-icons/ri";
 import { FaStop, FaPlay } from "react-icons/fa";
 import { BsFillSendArrowUpFill } from "react-icons/bs";
 
-const formatTime = (seconds) =>
-  [seconds / 60, seconds % 60]
-    .map((v) => `0${Math.floor(v)}`.slice(-2))
-    .join(":");
+//Utils
+import { formatTime } from "../features/utils";
 
-const languages = [
-  {
-    name: "Kinyarwanda",
-    value: "kiny",
-  },
-  {
-    name: "Lingala",
-    value: "lin",
-  },
-];
+//Languages
+import { speechToTextLanguages } from "../features/languages";
 
 const RecordComponent = ({
   loading,
@@ -52,6 +42,8 @@ const RecordComponent = ({
     cursorColor: "#E6E6E6",
     height: 30,
     width: 150,
+    normalize: true,
+    partialRender: true,
   });
 
   useEffect(() => {
@@ -102,7 +94,10 @@ const RecordComponent = ({
       <div className="controlls">
         <div
           className={
-            !isRecordPlaying && !isRecording && !recordedAudio
+            !isRecordPlaying &&
+            !isRecording &&
+            !recordedAudio &&
+            !requestSuccess
               ? "mic"
               : "hidden"
           }
@@ -112,7 +107,7 @@ const RecordComponent = ({
         </div>
         <div
           className={
-            !isRecordPlaying && isRecording && !recordedAudio
+            !isRecordPlaying && isRecording && !recordedAudio && !requestSuccess
               ? "recording"
               : "hidden"
           }
@@ -126,6 +121,7 @@ const RecordComponent = ({
             record={isRecording}
             className="sound"
             onStop={onStop}
+            mimeType="audio/wav"
             strokeColor="#2E2E2E"
             backgroundColor="#FFFFFF"
           />
@@ -135,7 +131,7 @@ const RecordComponent = ({
         </div>
         <div
           className={
-            isRecordPlaying && !isRecording && recordedAudio
+            isRecordPlaying && !isRecording && recordedAudio && !requestSuccess
               ? "record"
               : "hidden"
           }
@@ -160,13 +156,13 @@ const RecordComponent = ({
           </div>
         </div>
         <div className={requestSuccess ? "record" : "hidden"}>
-          <div className="pause">
-            <FaPause />
+          <div className="pause" onClick={tooglePlaying}>
+            {isPlaying ? <FaPause /> : <FaPlay />}
           </div>
           <div className="sound">
-            <p>00:00</p>
+            <p>{formatTime(currentTime)}</p>
             <div className="line" ref={wavesRef} />
-            <p>00:00</p>
+            <p>{formatTime(wavesurfer?.getDuration())}</p>
           </div>
         </div>
       </div>
@@ -174,13 +170,10 @@ const RecordComponent = ({
         onChange={(e) => {
           setLanguage(e.target.value);
         }}
+        value={language}
       >
-        {languages.map((lang, index) => (
-          <option
-            key={index}
-            value={lang.value}
-            selected={lang.value === language}
-          >
+        {speechToTextLanguages.map((lang, index) => (
+          <option key={index} value={lang.value}>
             {lang.name}
           </option>
         ))}

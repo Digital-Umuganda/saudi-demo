@@ -1,6 +1,4 @@
-import axios from "axios";
 import styled from "styled-components";
-import { toast } from "react-toastify";
 import { Fragment, useState } from "react";
 
 //Icons
@@ -11,52 +9,20 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 //Components
 import RecordComponent from "../../components/record";
 
+//Requests
+import useSpeechToText from "../../features/speech-to-text";
+
 const Record = () => {
   //staes
-  const [loading, setLoading] = useState(false);
-  const [requestSuccess, setRequestSuccess] = useState(false);
+  const [blob, setBlob] = useState(null);
+  const [language, setLanguage] = useState("kiny");
 
-  const transcribe = async (recordedBlob) => {
-    if (recordedBlob && !loading) {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("file", recordedBlob.blob, recordedBlob.name);
-
-      axios
-        .post("https://stt.umuganda.digital/transcribe/", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((res) => {
-          setRequestSuccess(true);
-        })
-        .catch((err) => {
-          switch (err.code) {
-            case "ERR_NETWORK":
-              toast.info("Please check your connection try again.");
-              break;
-
-            case "ERR_BAD_REQUEST":
-              toast.error("Please try again.");
-              break;
-
-            default:
-              break;
-          }
-
-          console.log(err);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  };
+  const { isLoading, isSuccess } = useSpeechToText(language, blob);
 
   return (
     <Container>
       <div className="content">
-        {requestSuccess ? (
+        {isSuccess ? (
           <Fragment>
             <div className="tops">
               <div className="button">
@@ -80,10 +46,11 @@ const Record = () => {
         )}
       </div>
       <RecordComponent
-        requestSuccess={requestSuccess}
-        transcribe={transcribe}
-        loading={loading}
-        setLoading={setLoading}
+        requestSuccess={isSuccess}
+        transcribe={setBlob}
+        loading={isLoading}
+        language={language}
+        setLanguage={setLanguage}
       />
     </Container>
   );

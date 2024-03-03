@@ -7,7 +7,6 @@ import { useEffect, useRef, useState } from "react";
 import { FaPause } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { RiMicFill } from "react-icons/ri";
-import { VscLoading } from "react-icons/vsc";
 import { FaStop, FaPlay } from "react-icons/fa";
 import { BsFillSendArrowUpFill } from "react-icons/bs";
 
@@ -16,11 +15,23 @@ const formatTime = (seconds) =>
     .map((v) => `0${Math.floor(v)}`.slice(-2))
     .join(":");
 
+const languages = [
+  {
+    name: "Kinyarwanda",
+    value: "kiny",
+  },
+  {
+    name: "Lingala",
+    value: "lin",
+  },
+];
+
 const RecordComponent = ({
-  requestSuccess,
-  transcribe,
   loading,
-  setLoading,
+  language,
+  transcribe,
+  setLanguage,
+  requestSuccess,
 }) => {
   // show states
   const [isRecording, setIsRecording] = useState(false);
@@ -33,7 +44,7 @@ const RecordComponent = ({
   // Audio
   const wavesRef = useRef(null);
 
-  const { wavesurfer, currentTime, isPlaying, getDuration } = useWavesurfer({
+  const { wavesurfer, currentTime, isPlaying } = useWavesurfer({
     container: wavesRef,
     url: recordedAudio?.blobURL || null,
     waveColor: "#101010",
@@ -159,9 +170,20 @@ const RecordComponent = ({
           </div>
         </div>
       </div>
-      <SelectBox>
-        <option value="Kinyarwanda">Kinyarwanda</option>
-        <option value="English">English</option>
+      <SelectBox
+        onChange={(e) => {
+          setLanguage(e.target.value);
+        }}
+      >
+        {languages.map((lang, index) => (
+          <option
+            key={index}
+            value={lang.value}
+            selected={lang.value === language}
+          >
+            {lang.name}
+          </option>
+        ))}
       </SelectBox>
     </Container>
   );

@@ -18,4 +18,15 @@ const speechToTextEnConf = (data) => {
   };
 };
 
-export { speechToTextKinConf, speechToTextEnConf };
+const textToSpeechKinConf = (data) => {
+  return {
+    params: data,
+    method: "post",
+    responseType: "blob",
+    url: "/generate_audio/",
+    maxBodyLength: Infinity,
+    baseURL: "https://tts.umuganda.digital",
+  };
+};
+
+export { speechToTextKinConf, speechToTextEnConf, textToSpeechKinConf };

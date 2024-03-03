@@ -1,19 +1,36 @@
-import { useRef } from "react";
 import styled from "styled-components";
+import { useForm } from "react-hook-form";
 import { useWavesurfer } from "@wavesurfer/react";
+import { Fragment, useRef, useState } from "react";
 
 //Icons
-import { FaPause } from "react-icons/fa";
+import { FaPause, FaPlay } from "react-icons/fa";
 import { AiFillEdit } from "react-icons/ai";
-import { MdFileUpload } from "react-icons/md";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { BsFillSendArrowUpFill } from "react-icons/bs";
+
+//Languages
+import { textToSpeechLanguages } from "../../features/languages";
+
+//Features
+import useTextToSpeech from "../../features/text-to-speech";
+
+//Utils
+import { formatTime } from "../../features/utils";
 
 const Text = () => {
   const wavesRef = useRef(null);
+  const [text, setText] = useState("");
+  const [language, setLanguage] = useState("kiny");
 
-  const { wavesurfer } = useWavesurfer({
+  const { handleSubmit, register } = useForm();
+  const { isLoading, isSuccess, data } = useTextToSpeech(language, text);
+
+  console.log(data);
+
+  const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
     container: wavesRef,
-    url: null,
+    url: data || null,
     waveColor: "#101010",
     progressColor: "#FD6662",
     cursorColor: "#E6E6E6",
@@ -24,22 +41,38 @@ const Text = () => {
     wavesurfer.playPause();
   };
 
+  const onSubmit = (data) => {
+    setText(data.text);
+  };
+
   return (
-    <Container>
+    <Container onSubmit={handleSubmit(onSubmit)}>
       <div className="content">
         <div className="tops">
-          <SelectBox>
-            <option value="Kinyarwanda">Kinyarwanda</option>
-            <option value="English">English</option>
+          <SelectBox
+            onChange={(e) => {
+              setLanguage(e.target.value);
+            }}
+            value={language}
+          >
+            {textToSpeechLanguages.map((lang, index) => (
+              <option key={index} value={lang.value}>
+                {lang.name}
+              </option>
+            ))}
           </SelectBox>
-          {/* <div className="button">
-            <IoMdArrowRoundBack />
-            <p>Go back</p>
-          </div>
-          <div className="button">
-            <AiFillEdit />
-            <p>Edit</p>
-          </div> */}
+          {isSuccess && (
+            <Fragment>
+              <div className="button">
+                <IoMdArrowRoundBack />
+                <p>Go back</p>
+              </div>
+              <div className="button">
+                <AiFillEdit />
+                <p>Edit</p>
+              </div>
+            </Fragment>
+          )}
         </div>
         <div className="input">
           <textarea
@@ -48,6 +81,9 @@ const Text = () => {
             cols="30"
             rows="10"
             autoFocus
+            {...register("text", {
+              required: "You need text before submitting",
+            })}
             placeholder="Type your text here..."
           />
         </div>
@@ -56,14 +92,32 @@ const Text = () => {
         </div> */}
       </div>
       <Player>
-        <div className="pause">
-          <FaPause />
-        </div>
-        <div className="sound">
-          <p>00:00</p>
-          <div className="line" ref={wavesRef} />
-          <p>00:00</p>
-        </div>
+        {!isSuccess ? (
+          <Fragment>
+            {isLoading ? (
+              <div className="send">
+                <img src="/assets/loader.svg" alt="Loader" />
+                <p>Transcribing...</p>
+              </div>
+            ) : (
+              <button className="send" type="submit">
+                <BsFillSendArrowUpFill />
+                <p>Send</p>
+              </button>
+            )}
+          </Fragment>
+        ) : (
+          <Fragment>
+            <div className="pause" onClick={tooglePlaying}>
+              {isPlaying ? <FaPause /> : <FaPlay />}
+            </div>
+            <div className="sound">
+              <p>{formatTime(currentTime)}</p>
+              <div className="line" ref={wavesRef} />
+              <p>{formatTime(wavesurfer?.getDuration())}</p>
+            </div>
+          </Fragment>
+        )}
       </Player>
     </Container>
   );
@@ -82,6 +136,29 @@ const Player = styled.div`
   background: var(--white);
   border: 1px solid var(--super-gray);
   padding: 0 5px;
+
+  .send {
+    width: auto;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 0 20px;
+    gap: 8px;
+    font-size: 1em;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    color: var(--green);
+    border: none;
+    background: transparent;
+
+    img {
+      width: 40px;
+    }
+  }
 
   .pause {
     width: 50px;
@@ -127,7 +204,7 @@ const SelectBox = styled.select`
   background-size: 0.65rem auto;
 `;
 
-const Container = styled.div`
+const Container = styled.form`
   width: 100vw;
   height: 100vh;
   display: flex;

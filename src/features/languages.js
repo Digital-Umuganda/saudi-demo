@@ -8,3 +8,10 @@ exports.speechToTextLanguages = [
     value: "lin",
   },
 ];
+
+exports.textToSpeechLanguages = [
+  {
+    name: "Kinyarwanda",
+    value: "kiny",
+  },
+];

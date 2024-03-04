@@ -1,32 +1,58 @@
 import styled from "styled-components";
-import { useCallback, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { useWavesurfer } from "@wavesurfer/react";
+import { Fragment, useCallback, useRef, useState } from "react";
 
 //Icons
-import { FaPause } from "react-icons/fa";
+import { FaPause, FaPlay } from "react-icons/fa";
 import { AiFillEdit } from "react-icons/ai";
 import { MdFileUpload } from "react-icons/md";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { BsFillSendArrowUpFill } from "react-icons/bs";
+
+//Features
+import useTextToSpeech from "../../features/text-to-speech";
+
+//Utils
+import { formatTime } from "../../features/utils";
+import { textToSpeechLanguages } from "../../features/languages";
 
 const Document = () => {
+  const wavesRef = useRef(null);
+  const [text, setText] = useState("");
+  const [content, setContent] = useState("");
+  const [language, setLanguage] = useState("kiny");
+  const [fileLoading, setFileLoading] = useState(false);
+
   const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
+    const file = acceptedFiles[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const binaryStr = reader.result;
+      setContent(binaryStr);
+    };
+
+    reader.readAsText(file);
   }, []);
+
+  const { isLoading, isSuccess, data } = useTextToSpeech(language, text);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  // Audio
-  const wavesRef = useRef(null);
-
-  const { wavesurfer } = useWavesurfer({
+  const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
     container: wavesRef,
-    url: null,
+    url: data || null,
     waveColor: "#101010",
     progressColor: "#FD6662",
     cursorColor: "#E6E6E6",
     height: 50,
+    width: 150,
   });
+
+  const sendtext = () => {
+    setText(content);
+  };
 
   const tooglePlaying = () => {
     wavesurfer.playPause();
@@ -36,46 +62,79 @@ const Document = () => {
     <Container>
       <div className="content">
         <div className="tops">
-          <SelectBox>
-            <option value="Kinyarwanda">Kinyarwanda</option>
-            <option value="English">English</option>
+          <SelectBox
+            onChange={(e) => {
+              setLanguage(e.target.value);
+            }}
+            value={language}
+          >
+            {textToSpeechLanguages.map((lang, index) => (
+              <option key={index} value={lang.value}>
+                {lang.name}
+              </option>
+            ))}
           </SelectBox>
-          {/* <div className="button">
-            <IoMdArrowRoundBack />
-            <p>Go back</p>
-          </div>
-          <div className="button">
-            <AiFillEdit />
-            <p>Edit</p>
-          </div> */}
-        </div>
-        <div className="dropzone" {...getRootProps()}>
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <p>Drop the file here ...</p>
-          ) : (
-            <div className="initial">
-              <MdFileUpload />
-              <p>
-                Drag and drop or <span>Choose a file</span> to upload
-              </p>
-              <p>Supported Formats: TXT </p>
-            </div>
+          {isSuccess && (
+            <Fragment>
+              <div className="button">
+                <IoMdArrowRoundBack />
+                <p>Go back</p>
+              </div>
+              <div className="button">
+                <AiFillEdit />
+                <p>Edit</p>
+              </div>
+            </Fragment>
           )}
         </div>
-        {/* <div className="text">
-          <p>Trying</p>
-        </div> */}
+        {content.length > 0 ? (
+          <div className="text">
+            <p>{content}</p>
+          </div>
+        ) : (
+          <div className="dropzone" {...getRootProps()}>
+            <input {...getInputProps()} />
+            {isDragActive ? (
+              <p>Drop the file here ...</p>
+            ) : (
+              <div className="initial">
+                <MdFileUpload />
+                <p>
+                  Drag and drop or <span>Choose a file</span> to upload
+                </p>
+                <p>Supported Formats: TXT </p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <Player>
-        <div className="pause">
-          <FaPause />
-        </div>
-        <div className="sound">
-          <p>00:00</p>
-          <div className="line" ref={wavesRef} />
-          <p>00:00</p>
-        </div>
+        {!isSuccess ? (
+          <Fragment>
+            {isLoading ? (
+              <div className="send">
+                <img src="/assets/loader.svg" alt="Loader" />
+                <p>Transcribing...</p>
+              </div>
+            ) : (
+              <div className="send" onClick={sendtext}>
+                <BsFillSendArrowUpFill />
+                <p>Send</p>
+              </div>
+            )}
+          </Fragment>
+        ) : (
+          <Fragment>
+            <div className="pause" onClick={tooglePlaying}>
+              {isPlaying ? <FaPause /> : <FaPlay />}
+            </div>
+            <div className="sound">
+              <p>{formatTime(currentTime)}</p>
+              <div className="line" ref={wavesRef} />
+              <p>{formatTime(wavesurfer?.getDuration())}</p>
+            </div>
+          </Fragment>
+        )}
       </Player>
     </Container>
   );
@@ -94,6 +153,29 @@ const Player = styled.div`
   background: var(--white);
   border: 1px solid var(--super-gray);
   padding: 0 5px;
+
+  .send {
+    width: auto;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 0 20px;
+    gap: 8px;
+    font-size: 1em;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    color: var(--green);
+    border: none;
+    background: transparent;
+
+    img {
+      width: 40px;
+    }
+  }
 
   .pause {
     width: 50px;

@@ -26,8 +26,6 @@ const Text = () => {
   const { handleSubmit, register } = useForm();
   const { isLoading, isSuccess, data } = useTextToSpeech(language, text);
 
-  console.log(data);
-
   const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
     container: wavesRef,
     url: data || null,
@@ -35,6 +33,7 @@ const Text = () => {
     progressColor: "#FD6662",
     cursorColor: "#E6E6E6",
     height: 50,
+    width: 150,
   });
 
   const tooglePlaying = () => {
@@ -87,9 +86,6 @@ const Text = () => {
             placeholder="Type your text here..."
           />
         </div>
-        {/* <div className="text">
-          <p>Trying</p>
-        </div> */}
       </div>
       <Player>
         {!isSuccess ? (

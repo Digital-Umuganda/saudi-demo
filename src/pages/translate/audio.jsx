@@ -10,13 +10,13 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdFileUpload, MdOutlineFormatTextdirectionLToR } from "react-icons/md";
 
 //Requests
-import useMachineTranslation from "../../features/machine-translate";
+import useSpeechTranslation from "../../features/speech-translate";
 
 //Utils
 import { formatTime } from "../../features/utils";
 
 //Languages
-import { machineTranslationLanguages } from "../../features/languages";
+import { speechTranslationLanguages } from "../../features/languages";
 
 const Audio = () => {
   const [url, setUrl] = useState(null);
@@ -24,7 +24,7 @@ const Audio = () => {
   const [language1, setLanguage1] = useState("en");
   const [language2, setLanguage2] = useState("kiny");
 
-  const { isLoading, isSuccess, data } = useMachineTranslation(
+  const { isLoading, isSuccess, data } = useSpeechTranslation(
     language1,
     language2,
     blob
@@ -72,7 +72,7 @@ const Audio = () => {
             }}
             value={language1}
           >
-            {machineTranslationLanguages.map((lang, index) => (
+            {speechTranslationLanguages.map((lang, index) => (
               <option key={index} value={lang.value}>
                 {lang.name}
               </option>
@@ -87,7 +87,7 @@ const Audio = () => {
             }}
             value={language2}
           >
-            {machineTranslationLanguages.map((lang, index) => (
+            {speechTranslationLanguages.map((lang, index) => (
               <option key={index} value={lang.value}>
                 {lang.name}
               </option>

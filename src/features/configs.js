@@ -49,10 +49,21 @@ const kinyToEnSpeechConf = (data) => {
   };
 };
 
+const translateTextConf = (data) => {
+  return {
+    data: data,
+    method: "post",
+    url: "/translate/",
+    maxBodyLength: Infinity,
+    baseURL: "https://nmt-api.umuganda.digital/api/v1",
+  };
+};
+
 export {
   speechToTextKinConf,
   speechToTextEnConf,
   textToSpeechKinConf,
   enToKinySpeechConf,
   kinyToEnSpeechConf,
+  translateTextConf,
 };

@@ -10,17 +10,17 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import RecordComponent from "../../components/record";
 
 //Languages
-import { machineTranslationLanguages } from "../../features/languages";
+import { speechTranslationLanguages } from "../../features/languages";
 
 // Request
-import useMachineTranslation from "../../features/machine-translate";
+import useSpeechTranslation from "../../features/speech-translate";
 
 const Record = () => {
   const [blob, setBlob] = useState(null);
   const [language1, setLanguage1] = useState("en");
   const [language2, setLanguage2] = useState("kiny");
 
-  const { isLoading, isSuccess, data } = useMachineTranslation(
+  const { isLoading, isSuccess, data } = useSpeechTranslation(
     language2,
     language1,
     blob
@@ -36,25 +36,24 @@ const Record = () => {
             }}
             value={language1}
           >
-            {machineTranslationLanguages.map((lang, index) => (
+            {speechTranslationLanguages.map((lang, index) => (
               <option key={index} value={lang.value}>
                 {lang.name}
               </option>
             ))}
           </SelectBox>
-          {isSuccess && (
-            <Fragment>
-              <div className="button">
-                <IoMdArrowRoundBack />
-                <p>Go back</p>
-              </div>
-            </Fragment>
-          )}
         </div>
-        <div className="rest">
-          <PiBookOpenTextFill />
-          <p>Record an audio to see the transcription here.</p>
-        </div>
+        {isLoading ? (
+          <div className="loading">
+            <img src="/assets/loader.svg" alt="Loader" />
+            <p>Transcribing...</p>
+          </div>
+        ) : (
+          <div className="rest">
+            <PiBookOpenTextFill />
+            <p>Record an audio to see the transcription here.</p>
+          </div>
+        )}
         {isSuccess && (
           <div className="text">
             <p>{data}</p>

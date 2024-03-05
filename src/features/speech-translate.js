@@ -2,25 +2,25 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 // Configs
-import { translateTextConf } from "./configs";
+import { enToKinySpeechConf, kinyToEnSpeechConf } from "./configs";
+
+// Error handler
 import handleError from "./errors";
 
-export default function useMachineTranslation(from, to, text) {
+export default function useSpeechTranslation(from, to, blob) {
   const [data, setData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && text.length > 0) {
+    if (!isLoading && blob) {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("text", text);
-      formData.append("src", from);
-      formData.append("tgt", to);
+      formData.append("audio_file", blob.blob);
 
       if (from === "en" && to === "kiny") {
         axios
-          .request(translateTextConf(formData))
+          .request(enToKinySpeechConf(formData))
           .then((res) => {
             setIsSuccess(true);
             setData(res.data);
@@ -34,7 +34,7 @@ export default function useMachineTranslation(from, to, text) {
           });
       } else if (from === "kiny" && to === "en") {
         axios
-          .request(translateTextConf(formData))
+          .request(kinyToEnSpeechConf(formData))
           .then((res) => {
             setIsSuccess(true);
             setData(res.data);
@@ -53,7 +53,7 @@ export default function useMachineTranslation(from, to, text) {
         return;
       }
     }
-  }, [from, to, text]);
+  }, [from, to, blob]);
 
   return { isLoading, isSuccess, data };
 }

@@ -26,3 +26,14 @@ exports.machineTranslationLanguages = [
     value: "en",
   },
 ];
+
+exports.speechTranslationLanguages = [
+  {
+    name: "Kinyarwanda",
+    value: "kiny",
+  },
+  {
+    name: "English",
+    value: "en",
+  },
+];

@@ -1,23 +1,47 @@
+import { useState } from "react";
 import styled from "styled-components";
+import { useForm } from "react-hook-form";
 
 // Icons
 import { AiFillEdit } from "react-icons/ai";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdOutlineFormatTextdirectionLToR } from "react-icons/md";
 
+// Requests
+import useMachineTranslation from "../../features/machine-translate";
+
+// Languages
+import { machineTranslationLanguages } from "../../features/languages";
+
 const Text = () => {
+  const [text, setText] = useState("");
+  const [language1, setLanguage1] = useState("en");
+  const [language2, setLanguage2] = useState("kiny");
+
+  const { isLoading, data } = useMachineTranslation(language1, language2, text);
+
+  const { handleSubmit, register } = useForm();
+
+  const onSubmit = (data) => {
+    setText(data.text);
+  };
+
   return (
-    <Container>
+    <Container onSubmit={handleSubmit(onSubmit)}>
       <div className="box">
         <div className="tops">
-          {/* <div className="button">
-            <IoMdArrowRoundBack />
-            <p>Go back</p>
-          </div> */}
           <p>Your Text</p>
-          <SelectBox>
-            <option value="Kinyarwanda">Kinyarwanda</option>
-            <option value="English">English</option>
+          <SelectBox
+            onChange={(e) => {
+              setLanguage1(e.target.value);
+            }}
+            value={language1}
+          >
+            {machineTranslationLanguages.map((lang, index) => (
+              <option key={index} value={lang.value}>
+                {lang.name}
+              </option>
+            ))}
           </SelectBox>
         </div>
         <div className="content">
@@ -26,26 +50,37 @@ const Text = () => {
             id="text"
             cols="30"
             rows="10"
+            {...register("text", { required: true })}
             placeholder="Type your text here"
           ></textarea>
         </div>
       </div>
-      <div className="tool">
-        <MdOutlineFormatTextdirectionLToR />
-      </div>
+      <button className="tool" type="submit">
+        {isLoading ? (
+          <img src="/assets/loader.svg" alt="Loader" />
+        ) : (
+          <MdOutlineFormatTextdirectionLToR />
+        )}
+      </button>
       <div className="box">
         <div className="tops">
           <p>Generated Text</p>
-          {/* <div className="button">
-            <AiFillEdit />
-            <p>Edit</p>
-          </div> */}
-          <SelectBox>
-            <option value="Kinyarwanda">Kinyarwanda</option>
-            <option value="English">English</option>
+          <SelectBox
+            onChange={(e) => {
+              setLanguage2(e.target.value);
+            }}
+            value={language2}
+          >
+            {machineTranslationLanguages.map((lang, index) => (
+              <option key={index} value={lang.value}>
+                {lang.name}
+              </option>
+            ))}
           </SelectBox>
         </div>
-        <div className="content"></div>
+        <div className="content">
+          <p>{data}</p>
+        </div>
       </div>
     </Container>
   );
@@ -69,7 +104,7 @@ const SelectBox = styled.select`
   background-size: 0.65rem auto;
 `;
 
-const Container = styled.div`
+const Container = styled.form`
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -93,6 +128,10 @@ const Container = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
+    img {
+      width: 40px;
+    }
 
     svg {
       font-size: 1.5em;
@@ -142,6 +181,12 @@ const Container = styled.div`
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      overflow-y: scroll;
+
+      p {
+        font-size: 0.9em;
+        line-height: 25px;
+      }
 
       textarea {
         width: 100%;

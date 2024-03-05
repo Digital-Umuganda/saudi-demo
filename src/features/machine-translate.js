@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 
 // Configs
 import { translateTextConf } from "./configs";
+
+// Handle errors
 import handleError from "./errors";
 
 export default function useMachineTranslation(from, to, text) {

@@ -35,7 +35,7 @@ const enToKinySpeechConf = (data) => {
     method: "post",
     url: "/transcribe-english-kinyarwanda",
     maxBodyLength: Infinity,
-    baseURL: "http://translate.umuganda.digital",
+    baseURL: "https://translate.umuganda.digital",
   };
 };
 
@@ -45,7 +45,7 @@ const kinyToEnSpeechConf = (data) => {
     method: "post",
     url: "/transcribe-kinyarwanda-english",
     maxBodyLength: Infinity,
-    baseURL: "http://translate.umuganda.digital",
+    baseURL: "https://translate.umuganda.digital",
   };
 };
 

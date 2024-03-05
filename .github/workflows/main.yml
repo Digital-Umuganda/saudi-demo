@@ -1,0 +1,15 @@
+name: CI
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    name: build packages
+    runs-on:
+      - gpt-4
+    steps:
+      - uses: actions/checkout@v3
+      - name: build packages
+        run: |
+          docker compose build

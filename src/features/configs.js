@@ -29,4 +29,30 @@ const textToSpeechKinConf = (data) => {
   };
 };
 
-export { speechToTextKinConf, speechToTextEnConf, textToSpeechKinConf };
+const enToKinySpeechConf = (data) => {
+  return {
+    data: data,
+    method: "post",
+    url: "/transcribe-english-kinyarwanda",
+    maxBodyLength: Infinity,
+    baseURL: "http://translate.umuganda.digital",
+  };
+};
+
+const kinyToEnSpeechConf = (data) => {
+  return {
+    data: data,
+    method: "post",
+    url: "/transcribe-kinyarwanda-english",
+    maxBodyLength: Infinity,
+    baseURL: "http://translate.umuganda.digital",
+  };
+};
+
+export {
+  speechToTextKinConf,
+  speechToTextEnConf,
+  textToSpeechKinConf,
+  enToKinySpeechConf,
+  kinyToEnSpeechConf,
+};

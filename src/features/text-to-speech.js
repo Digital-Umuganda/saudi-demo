@@ -7,9 +7,6 @@ import { textToSpeechKinConf } from "./configs";
 // Error handler
 import handleError from "./errors";
 
-// Utils
-import { decodeBinary } from "./utils";
-
 export default function useTextToSpeech(language, text) {
   const [data, setData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +23,6 @@ export default function useTextToSpeech(language, text) {
         .request(textToSpeechKinConf(formData))
         .then((res) => {
           setIsSuccess(true);
-
           const url = URL.createObjectURL(res.data);
           setData(url);
         })

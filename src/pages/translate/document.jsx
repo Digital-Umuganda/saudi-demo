@@ -1,16 +1,42 @@
-import { useCallback } from "react";
 import styled from "styled-components";
 import { useDropzone } from "react-dropzone";
+import { useCallback, useState } from "react";
 
 // Icons
 import { AiFillEdit } from "react-icons/ai";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdFileUpload, MdOutlineFormatTextdirectionLToR } from "react-icons/md";
 
+// Requests
+import useMachineTranslation from "../../features/machine-translate";
+
 const Document = () => {
+  const [text, setText] = useState("");
+  const [content, setContent] = useState("");
+  const [language1, setLanguage1] = useState("en");
+  const [language2, setLanguage2] = useState("kiny");
+
+  const { isLoading, data } = useMachineTranslation(
+    language1,
+    language2,
+    content
+  );
+
   const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
+    const file = acceptedFiles[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const binaryStr = reader.result;
+      setText(binaryStr);
+    };
+
+    reader.readAsText(file);
   }, []);
+
+  const sendText = () => {
+    setContent(text);
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -18,10 +44,6 @@ const Document = () => {
     <Container>
       <div className="box">
         <div className="tops">
-          {/* <div className="button">
-            <IoMdArrowRoundBack />
-            <p>Go back</p>
-          </div> */}
           <p>Your Text</p>
           <SelectBox>
             <option value="Kinyarwanda">Kinyarwanda</option>
@@ -29,38 +51,46 @@ const Document = () => {
           </SelectBox>
         </div>
         <div className="content">
-          <div className="dropzone" {...getRootProps()}>
-            <input {...getInputProps()} />
-            {isDragActive ? (
-              <p>Drop the file here ...</p>
-            ) : (
-              <div className="initial">
-                <MdFileUpload />
-                <p>
-                  Drag and drop or <span>Choose a file</span> to upload
-                </p>
-                <p>Supported Formats: TXT </p>
-              </div>
-            )}
-          </div>
+          {text.length > 0 ? (
+            <div className="text">
+              <p>{text}</p>
+            </div>
+          ) : (
+            <div className="dropzone" {...getRootProps()}>
+              <input {...getInputProps()} />
+              {isDragActive ? (
+                <p>Drop the file here ...</p>
+              ) : (
+                <div className="initial">
+                  <MdFileUpload />
+                  <p>
+                    Drag and drop or <span>Choose a file</span> to upload
+                  </p>
+                  <p>Supported Formats: TXT </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
-      <div className="tool">
-        <MdOutlineFormatTextdirectionLToR />
+      <div className="tool" onClick={sendText}>
+        {isLoading ? (
+          <img src="/assets/loader.svg" alt="Loader" />
+        ) : (
+          <MdOutlineFormatTextdirectionLToR />
+        )}
       </div>
       <div className="box">
         <div className="tops">
           <p>Generated Text</p>
-          {/* <div className="button">
-            <AiFillEdit />
-            <p>Edit</p>
-          </div> */}
           <SelectBox>
             <option value="Kinyarwanda">Kinyarwanda</option>
             <option value="English">English</option>
           </SelectBox>
         </div>
-        <div className="content"></div>
+        <div className="content">
+          <p>{data}</p>
+        </div>
       </div>
     </Container>
   );
@@ -108,6 +138,10 @@ const Container = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
+    img {
+      width: 40px;
+    }
 
     svg {
       font-size: 1.5em;
@@ -157,6 +191,18 @@ const Container = styled.div`
       flex-direction: column;
       align-items: center;
       justify-content: center;
+
+      .text {
+        width: 100%;
+        height: 100%;
+        padding: 15px;
+        overflow-y: scroll;
+
+        p {
+          font-size: 0.9em;
+          line-height: 25px;
+        }
+      }
 
       .dropzone {
         width: 100%;

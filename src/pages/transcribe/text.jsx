@@ -62,18 +62,6 @@ const Text = () => {
               </option>
             ))}
           </SelectBox>
-          {isSuccess && (
-            <Fragment>
-              <div className="button">
-                <IoMdArrowRoundBack />
-                <p>Go back</p>
-              </div>
-              <div className="button">
-                <AiFillEdit />
-                <p>Edit</p>
-              </div>
-            </Fragment>
-          )}
         </div>
         <div className="input">
           <textarea

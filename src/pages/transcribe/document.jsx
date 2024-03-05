@@ -76,18 +76,6 @@ const Document = () => {
               </option>
             ))}
           </SelectBox>
-          {isSuccess && (
-            <Fragment>
-              <div className="button">
-                <IoMdArrowRoundBack />
-                <p>Go back</p>
-              </div>
-              <div className="button">
-                <AiFillEdit />
-                <p>Edit</p>
-              </div>
-            </Fragment>
-          )}
         </div>
         {content.length > 0 ? (
           <div className="text">

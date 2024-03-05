@@ -23,21 +23,9 @@ const Record = () => {
     <Container>
       <div className="content">
         {isSuccess ? (
-          <Fragment>
-            <div className="tops">
-              <div className="button">
-                <IoMdArrowRoundBack />
-                <p>Go back</p>
-              </div>
-              <div className="button">
-                <AiFillEdit />
-                <p>Edit</p>
-              </div>
-            </div>
-            <div className="text">
-              <p>{data?.text}</p>
-            </div>
-          </Fragment>
+          <div className="text">
+            <p>{data?.text}</p>
+          </div>
         ) : (
           <div className="rest">
             <PiBookOpenTextFill />

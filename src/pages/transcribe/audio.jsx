@@ -60,18 +60,6 @@ const Audio = () => {
   return (
     <Container>
       <div className="content">
-        {isSuccess && (
-          <div className="tops">
-            <div className="button">
-              <IoMdArrowRoundBack />
-              <p>Go back</p>
-            </div>
-            <div className="button">
-              <AiFillEdit />
-              <p>Edit</p>
-            </div>
-          </div>
-        )}
         {!isSuccess && !isLoading && (
           <div className="dropzone" {...getRootProps()}>
             <input {...getInputProps()} />

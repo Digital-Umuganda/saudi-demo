@@ -1,17 +1,44 @@
 import styled from "styled-components";
-import { useCallback, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { useWavesurfer } from "@wavesurfer/react";
+import { useCallback, useRef, useState } from "react";
 
 //Icons
-import { FaPause } from "react-icons/fa";
 import { AiFillEdit } from "react-icons/ai";
-import { MdFileUpload } from "react-icons/md";
+import { FaPause, FaPlay } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { MdFileUpload, MdOutlineFormatTextdirectionLToR } from "react-icons/md";
+
+//Requests
+import useMachineTranslation from "../../features/machine-translate";
+
+//Utils
+import { formatTime } from "../../features/utils";
+
+//Languages
+import { machineTranslationLanguages } from "../../features/languages";
 
 const Audio = () => {
+  const [url, setUrl] = useState(null);
+  const [blob, setBlob] = useState(null);
+  const [language1, setLanguage1] = useState("en");
+  const [language2, setLanguage2] = useState("kiny");
+
+  const { isLoading, isSuccess, data } = useMachineTranslation(
+    language1,
+    language2,
+    blob
+  );
+
   const onDrop = useCallback((acceptedFiles) => {
-    // Do something with the files
+    const blob = new Blob([acceptedFiles[0]], { type: acceptedFiles[0].type });
+    setBlob({
+      blob: blob,
+      type: acceptedFiles[0].type,
+    });
+
+    // load url
+    setUrl(URL.createObjectURL(blob));
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -19,13 +46,16 @@ const Audio = () => {
   // Audio
   const wavesRef = useRef(null);
 
-  const { wavesurfer } = useWavesurfer({
+  const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
     container: wavesRef,
-    url: null,
+    url: url || null,
     waveColor: "#101010",
     progressColor: "#FD6662",
     cursorColor: "#E6E6E6",
     height: 50,
+    width: 150,
+    normalize: true,
+    partialRender: true,
   });
 
   const tooglePlaying = () => {
@@ -36,45 +66,72 @@ const Audio = () => {
     <Container>
       <div className="content">
         <div className="tops">
-          <SelectBox>
-            <option value="Kinyarwanda">Kinyarwanda</option>
-            <option value="English">English</option>
+          <SelectBox
+            onChange={(e) => {
+              setLanguage1(e.target.value);
+            }}
+            value={language1}
+          >
+            {machineTranslationLanguages.map((lang, index) => (
+              <option key={index} value={lang.value}>
+                {lang.name}
+              </option>
+            ))}
           </SelectBox>
-          {/* <div className="button">
-            <IoMdArrowRoundBack />
-            <p>Go back</p>
+          <div className="tool">
+            <MdOutlineFormatTextdirectionLToR />
           </div>
-          <div className="button">
-            <AiFillEdit />
-            <p>Edit</p>
-          </div> */}
+          <SelectBox
+            onChange={(e) => {
+              setLanguage2(e.target.value);
+            }}
+            value={language2}
+          >
+            {machineTranslationLanguages.map((lang, index) => (
+              <option key={index} value={lang.value}>
+                {lang.name}
+              </option>
+            ))}
+          </SelectBox>
         </div>
-        <div className="dropzone" {...getRootProps()}>
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <p>Drop the file here ...</p>
-          ) : (
-            <div className="initial">
-              <MdFileUpload />
-              <p>
-                Drag and drop or <span>Choose a file</span> to upload
-              </p>
-              <p>Supported Formats: MP4, WAV, FLAC </p>
+        <div className="dropzone">
+          {!isSuccess && !isLoading && (
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              {isDragActive ? (
+                <p>Drop the file here ...</p>
+              ) : (
+                <div className="initial">
+                  <MdFileUpload />
+                  <p>
+                    Drag and drop or <span>Choose a file</span> to upload
+                  </p>
+                  <p>Supported Formats: WAV, AU, AIFF, MP3, CSL, SD </p>
+                </div>
+              )}
+            </div>
+          )}
+          {!isSuccess && isLoading && (
+            <div className="loading">
+              <img src="/assets/loader.svg" alt="Loader" />
+              <p>Transcribing...</p>
+            </div>
+          )}
+          {isSuccess && !isLoading && (
+            <div className="text">
+              <p>{data?.text}</p>
             </div>
           )}
         </div>
-        {/* <div className="text">
-          <p>Trying</p>
-        </div> */}
       </div>
       <Player>
-        <div className="pause">
-          <FaPause />
+        <div className="pause" onClick={tooglePlaying}>
+          {isPlaying ? <FaPause /> : <FaPlay />}
         </div>
         <div className="sound">
-          <p>00:00</p>
+          <p>{formatTime(currentTime)}</p>
           <div className="line" ref={wavesRef} />
-          <p>00:00</p>
+          <p>{formatTime(wavesurfer?.getDuration())}</p>
         </div>
       </Player>
     </Container>
@@ -169,6 +226,19 @@ const Container = styled.div`
       padding: 0 15px;
       border-bottom: 1px solid var(--super-gray);
 
+      .tool {
+        width: 50px;
+        height: 50px;
+        background: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+          font-size: 1.5em;
+        }
+      }
+
       .button {
         display: flex;
         padding: 10px 20px;
@@ -214,17 +284,33 @@ const Container = styled.div`
           }
         }
       }
-    }
 
-    .text {
-      width: 100%;
-      height: calc(100vh - 350px - 70px);
-      padding: 15px;
-      overflow-y: scroll;
+      .loading {
+        width: auto;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
 
-      p {
-        font-size: 0.9em;
-        line-height: 25px;
+        img {
+          width: 40px;
+        }
+
+        p {
+          color: var(--gray);
+        }
+      }
+
+      .text {
+        width: 100%;
+        height: calc(100vh - 350px - 70px);
+        padding: 15px;
+        overflow-y: scroll;
+
+        p {
+          font-size: 0.9em;
+          line-height: 25px;
+        }
       }
     }
   }

@@ -48,6 +48,8 @@ const Document = () => {
     cursorColor: "#E6E6E6",
     height: 50,
     width: 150,
+    normalize: true,
+    partialRender: true,
   });
 
   const sendtext = () => {

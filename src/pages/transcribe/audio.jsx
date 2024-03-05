@@ -101,28 +101,26 @@ const Audio = () => {
         )}
       </div>
       <Player>
-        <Fragment>
-          <div className="pause" onClick={tooglePlaying}>
-            {isPlaying ? <FaPause /> : <FaPlay />}
-          </div>
-          <div className="sound">
-            <p>{formatTime(currentTime)}</p>
-            <div className="line" ref={wavesRef} />
-            <p>{formatTime(wavesurfer?.getDuration())}</p>
-          </div>
-          <SelectBox
-            onChange={(e) => {
-              setLanguage(e.target.value);
-            }}
-            value={language}
-          >
-            {speechToTextLanguages.map((lang, index) => (
-              <option key={index} value={lang.value}>
-                {lang.name}
-              </option>
-            ))}
-          </SelectBox>
-        </Fragment>
+        <div className="pause" onClick={tooglePlaying}>
+          {isPlaying ? <FaPause /> : <FaPlay />}
+        </div>
+        <div className="sound">
+          <p>{formatTime(currentTime)}</p>
+          <div className="line" ref={wavesRef} />
+          <p>{formatTime(wavesurfer?.getDuration())}</p>
+        </div>
+        <SelectBox
+          onChange={(e) => {
+            setLanguage(e.target.value);
+          }}
+          value={language}
+        >
+          {speechToTextLanguages.map((lang, index) => (
+            <option key={index} value={lang.value}>
+              {lang.name}
+            </option>
+          ))}
+        </SelectBox>
       </Player>
     </Container>
   );

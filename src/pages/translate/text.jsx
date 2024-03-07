@@ -15,8 +15,8 @@ import { machineTranslationLanguages } from "../../features/languages";
 
 const Text = () => {
   const [text, setText] = useState("");
-  const [language1, setLanguage1] = useState("en");
-  const [language2, setLanguage2] = useState("rw");
+  const [language1, setLanguage1] = useState("rw");
+  const [language2, setLanguage2] = useState("en");
 
   const { isLoading, data } = useMachineTranslation(language1, language2, text);
 

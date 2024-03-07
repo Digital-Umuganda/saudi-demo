@@ -10,11 +10,14 @@ import { MdFileUpload, MdOutlineFormatTextdirectionLToR } from "react-icons/md";
 // Requests
 import useMachineTranslation from "../../features/machine-translate";
 
+// Languages
+import { machineTranslationLanguages } from "../../features/languages";
+
 const Document = () => {
   const [text, setText] = useState("");
   const [content, setContent] = useState("");
-  const [language1, setLanguage1] = useState("en");
-  const [language2, setLanguage2] = useState("rw");
+  const [language1, setLanguage1] = useState("rw");
+  const [language2, setLanguage2] = useState("en");
 
   const { isLoading, data } = useMachineTranslation(
     language1,
@@ -45,9 +48,17 @@ const Document = () => {
       <div className="box">
         <div className="tops">
           <p>Your Text</p>
-          <SelectBox>
-            <option value="Kinyarwanda">Kinyarwanda</option>
-            <option value="English">English</option>
+          <SelectBox
+            onChange={(e) => {
+              setLanguage1(e.target.value);
+            }}
+            value={language1}
+          >
+            {machineTranslationLanguages.map((lang, index) => (
+              <option key={index} value={lang.value}>
+                {lang.name}
+              </option>
+            ))}
           </SelectBox>
         </div>
         <div className="content">
@@ -83,9 +94,17 @@ const Document = () => {
       <div className="box">
         <div className="tops">
           <p>Generated Text</p>
-          <SelectBox>
-            <option value="Kinyarwanda">Kinyarwanda</option>
-            <option value="English">English</option>
+          <SelectBox
+            onChange={(e) => {
+              setLanguage2(e.target.value);
+            }}
+            value={language2}
+          >
+            {machineTranslationLanguages.map((lang, index) => (
+              <option key={index} value={lang.value}>
+                {lang.name}
+              </option>
+            ))}
           </SelectBox>
         </div>
         <div className="content">

@@ -22,7 +22,7 @@ const Audio = () => {
   const [url, setUrl] = useState(null);
   const [blob, setBlob] = useState(null);
   const [language1, setLanguage1] = useState("en");
-  const [language2, setLanguage2] = useState("kiny");
+  const [language2, setLanguage2] = useState("rw");
 
   const { isLoading, isSuccess, data } = useSpeechTranslation(
     language1,

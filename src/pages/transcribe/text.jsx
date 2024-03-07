@@ -21,7 +21,7 @@ import { formatTime } from "../../features/utils";
 const Text = () => {
   const wavesRef = useRef(null);
   const [text, setText] = useState("");
-  const [language, setLanguage] = useState("kiny");
+  const [language, setLanguage] = useState("rw");
 
   const { handleSubmit, register } = useForm();
   const { isLoading, isSuccess, data } = useTextToSpeech(language, text);

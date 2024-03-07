@@ -15,7 +15,7 @@ import useSpeechToText from "../../features/speech-to-text";
 const Record = () => {
   //states
   const [blob, setBlob] = useState(null);
-  const [language, setLanguage] = useState("kiny");
+  const [language, setLanguage] = useState("rw");
 
   const { isLoading, isSuccess, data } = useSpeechToText(language, blob);
 

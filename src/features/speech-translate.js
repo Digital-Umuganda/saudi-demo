@@ -18,7 +18,7 @@ export default function useSpeechTranslation(from, to, blob) {
       const formData = new FormData();
       formData.append("audio_file", blob.blob);
 
-      if (from === "en" && to === "kiny") {
+      if (from === "en" && to === "rw") {
         axios
           .request(enToKinySpeechConf(formData))
           .then((res) => {
@@ -32,7 +32,7 @@ export default function useSpeechTranslation(from, to, blob) {
           .finally(() => {
             setIsLoading(false);
           });
-      } else if (from === "kiny" && to === "en") {
+      } else if (from === "rw" && to === "en") {
         axios
           .request(kinyToEnSpeechConf(formData))
           .then((res) => {

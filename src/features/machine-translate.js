@@ -16,11 +16,12 @@ export default function useMachineTranslation(from, to, text) {
     if (!isLoading && text.length > 0) {
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("text", text);
-      formData.append("src", from);
       formData.append("tgt", to);
+      formData.append("src", from);
+      formData.append("text", text);
+      formData.append("use_multi", "MULTI");
 
-      if (from === "en" && to === "kiny") {
+      if (from === "en" && to === "rw") {
         axios
           .request(translateTextConf(formData))
           .then((res) => {
@@ -34,7 +35,7 @@ export default function useMachineTranslation(from, to, text) {
           .finally(() => {
             setIsLoading(false);
           });
-      } else if (from === "kiny" && to === "en") {
+      } else if (from === "rw" && to === "en") {
         axios
           .request(translateTextConf(formData))
           .then((res) => {

@@ -14,7 +14,7 @@ const Document = () => {
   const [text, setText] = useState("");
   const [content, setContent] = useState("");
   const [language1, setLanguage1] = useState("en");
-  const [language2, setLanguage2] = useState("kiny");
+  const [language2, setLanguage2] = useState("rw");
 
   const { isLoading, data } = useMachineTranslation(
     language1,

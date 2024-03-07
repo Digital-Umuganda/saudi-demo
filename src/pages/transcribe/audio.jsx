@@ -21,7 +21,7 @@ import { speechToTextLanguages } from "../../features/languages";
 const Audio = () => {
   const [url, setUrl] = useState(null);
   const [blob, setBlob] = useState(null);
-  const [language, setLanguage] = useState("kiny");
+  const [language, setLanguage] = useState("rw");
 
   const { isLoading, isSuccess, data } = useSpeechToText(language, blob);
 

@@ -19,7 +19,7 @@ export default function useSpeechToText(language, blob) {
       formData.append("file", blob.blob, blob.type);
 
       switch (language) {
-        case "kiny":
+        case "rw":
           axios
             .request(speechToTextKinConf(formData))
             .then((res) => {

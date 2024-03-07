@@ -1,7 +1,7 @@
 exports.speechToTextLanguages = [
   {
     name: "Kinyarwanda",
-    value: "kiny",
+    value: "rw",
   },
   {
     name: "Lingala",
@@ -12,14 +12,14 @@ exports.speechToTextLanguages = [
 exports.textToSpeechLanguages = [
   {
     name: "Kinyarwanda",
-    value: "kiny",
+    value: "rw",
   },
 ];
 
 exports.machineTranslationLanguages = [
   {
     name: "Kinyarwanda",
-    value: "kiny",
+    value: "rw",
   },
   {
     name: "English",
@@ -30,7 +30,7 @@ exports.machineTranslationLanguages = [
 exports.speechTranslationLanguages = [
   {
     name: "Kinyarwanda",
-    value: "kiny",
+    value: "rw",
   },
   {
     name: "English",

@@ -21,7 +21,7 @@ const Document = () => {
   const wavesRef = useRef(null);
   const [text, setText] = useState("");
   const [content, setContent] = useState("");
-  const [language, setLanguage] = useState("kiny");
+  const [language, setLanguage] = useState("rw");
   const [fileLoading, setFileLoading] = useState(false);
 
   const onDrop = useCallback((acceptedFiles) => {

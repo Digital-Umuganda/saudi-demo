@@ -23,13 +23,13 @@ const Home = () => {
           scelerisque augue, in varius eros. Nunc sapien diam, euismod et
           pretium id, volutpat et tortor.
         </p>
-        <div className="about">
+        <a className="about" href="#about">
           <p>About Us</p>
           <IoChevronDownCircleOutline />
-        </div>
+        </a>
       </div>
       <div className="imigongo" />
-      <div className="aboutus">
+      <div className="aboutus" id="about">
         <div className="logo"></div>
         <div className="info">
           <p>
@@ -122,6 +122,7 @@ const Container = styled.div`
       justify-content: center;
       cursor: pointer;
       color: var(--white);
+      text-decoration: none;
 
       p {
         font-size: 1em;

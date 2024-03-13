@@ -26,11 +26,13 @@ function App() {
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* Transcribe */}
-        <Route path="/transcribe/text" element={<Text />} />
-        <Route path="/transcribe/audio" element={<Audio />} />
-        <Route path="/transcribe/record" element={<Record />} />
-        <Route path="/transcribe/document" element={<Document />} />
+        {/* Text-To-Speech */}
+        <Route path="/tts/text" element={<Text />} />
+        <Route path="/tts/document" element={<Document />} />
+
+        {/* Speech-To-Text */}
+        <Route path="/stt/audio" element={<Audio />} />
+        <Route path="/stt/record" element={<Record />} />
 
         {/* Translate */}
         <Route path="/translate/text" element={<TranslateText />} />

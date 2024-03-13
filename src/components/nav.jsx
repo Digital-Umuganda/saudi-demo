@@ -5,6 +5,7 @@ import { useLocation } from "react-router";
 //Icons
 import { GoHomeFill } from "react-icons/go";
 import { FaAngleDown } from "react-icons/fa";
+import { RiTranslate } from "react-icons/ri";
 import { MdTranscribe } from "react-icons/md";
 import { PiTranslateBold } from "react-icons/pi";
 
@@ -21,26 +22,36 @@ const Nav = () => {
           <GoHomeFill />
           <p>Home</p>
         </Link>
-        <div
-          className={
-            location.pathname.includes("transcribe") ? "active" : "link"
-          }
-        >
-          <MdTranscribe />
+        <div className={location.pathname.includes("tts") ? "active" : "link"}>
+          <RiTranslate />
           <p>
-            {location.pathname.includes("transcribe")
-              ? `Transcribe: ${
+            {location.pathname.includes("tts")
+              ? `Text-To-Speech: ${
                   location.pathname.split("/")[2].charAt(0).toUpperCase() +
                   location.pathname.split("/")[2].slice(1)
                 }`
-              : "Transcribe"}
+              : "Text-To-Speech"}
           </p>
           <FaAngleDown />
           <div className="dropdown">
-            <Link to={"/transcribe/record"}>Record</Link>
-            <Link to={"/transcribe/audio"}>Audio</Link>
-            <Link to={"transcribe/text"}>Text</Link>
-            <Link to={"transcribe/document"}>Document</Link>
+            <Link to={"tts/text"}>Text</Link>
+            <Link to={"tts/document"}>Document</Link>
+          </div>
+        </div>
+        <div className={location.pathname.includes("stt") ? "active" : "link"}>
+          <MdTranscribe />
+          <p>
+            {location.pathname.includes("stt")
+              ? `Speech-To-text: ${
+                  location.pathname.split("/")[2].charAt(0).toUpperCase() +
+                  location.pathname.split("/")[2].slice(1)
+                }`
+              : "Speech-To-Text"}
+          </p>
+          <FaAngleDown />
+          <div className="dropdown">
+            <Link to={"/stt/audio"}>Audio</Link>
+            <Link to={"/stt/record"}>Record</Link>
           </div>
         </div>
         <div

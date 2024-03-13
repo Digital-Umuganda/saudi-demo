@@ -1,8 +1,8 @@
-FROM node:20-bullseye-slim as builder
+FROM node:20.11.1-bullseye-slim 
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --force
 
 ENV PATH /app/node_modules/.bin:$PATH
 

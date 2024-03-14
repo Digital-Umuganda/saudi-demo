@@ -43,12 +43,22 @@ const Home = () => {
             focus on projects with a sustainable development impact.
           </p>
           <div className="buttons">
-            <div className="button">
+            <a
+              href="https://digitalumuganda.com"
+              className="button"
+              target="_blank"
+              rel="noreferrer"
+            >
               <p>Learn more</p>
-            </div>
-            <div className="button">
+            </a>
+            <a
+              href="https://digitalumuganda.com/contact/"
+              className="button"
+              target="_blank"
+              rel="noreferrer"
+            >
               <p>Contact us</p>
-            </div>
+            </a>
           </div>
         </div>
       </div>

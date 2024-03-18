@@ -34,8 +34,8 @@ const Nav = () => {
           </p>
           <FaAngleDown />
           <div className="dropdown">
-            <Link to={"tts/text"}>Text</Link>
-            <Link to={"tts/document"}>Document</Link>
+            <Link to={"tts/text"}>Type Text</Link>
+            <Link to={"tts/document"}>Upload Document</Link>
           </div>
         </div>
         <div className={location.pathname.includes("stt") ? "active" : "link"}>
@@ -50,8 +50,8 @@ const Nav = () => {
           </p>
           <FaAngleDown />
           <div className="dropdown">
-            <Link to={"/stt/audio"}>Audio</Link>
-            <Link to={"/stt/record"}>Record</Link>
+            <Link to={"/stt/audio"}>Upload Audio</Link>
+            <Link to={"/stt/record"}>Record Audio</Link>
           </div>
         </div>
         <div
@@ -70,10 +70,10 @@ const Nav = () => {
           </p>
           <FaAngleDown />
           <div className="dropdown">
-            <Link to={"/translate/record"}>Record</Link>
-            <Link to={"/translate/audio"}>Audio</Link>
-            <Link to={"translate/text"}>Text</Link>
-            <Link to={"translate/document"}>Document</Link>
+            <Link to={"/translate/record"}>Record Audio</Link>
+            <Link to={"/translate/audio"}>Upload Audio</Link>
+            <Link to={"translate/text"}>Type Text</Link>
+            <Link to={"translate/document"}>Upload Document</Link>
           </div>
         </div>
       </div>
